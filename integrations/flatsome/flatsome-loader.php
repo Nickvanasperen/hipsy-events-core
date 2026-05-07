@@ -24,6 +24,9 @@ function hipsy_load_flatsome_elements() {
     
     // Registreer Events Grid shortcode
     hipsy_register_flatsome_events_grid();
+
+    // Registreer losse eventvelden
+    hipsy_register_flatsome_event_title();
     
     // Enqueue Flatsome CSS
     add_action( 'wp_enqueue_scripts', 'hipsy_flatsome_enqueue_css' );
@@ -148,6 +151,98 @@ function hipsy_register_flatsome_events_grid() {
     
     // Shortcode render functie
     add_shortcode( 'hipsy_events_grid', 'hipsy_render_flatsome_grid' );
+}
+
+/**
+ * Registreer Event Titel UX Builder element
+ */
+function hipsy_register_flatsome_event_title() {
+
+    add_ux_builder_shortcode( 'hipsy_event_titel', array(
+        'name'     => 'Event Titel',
+        'category' => 'Hipsy Events',
+        'priority' => 2,
+
+        'options' => array(
+            'event_id' => array(
+                'type'    => 'textfield',
+                'heading' => 'Event ID',
+                'default' => '',
+                'description' => 'Laat leeg om het huidige event te gebruiken. Vul een WordPress event/post ID in om een specifiek event te tonen.',
+            ),
+            'tag' => array(
+                'type'    => 'select',
+                'heading' => 'HTML tag',
+                'default' => 'h1',
+                'options' => array(
+                    'h1'   => 'H1',
+                    'h2'   => 'H2',
+                    'h3'   => 'H3',
+                    'h4'   => 'H4',
+                    'p'    => 'Paragraaf',
+                    'div'  => 'Div',
+                    'span' => 'Span',
+                ),
+            ),
+            'link' => array(
+                'type'    => 'checkbox',
+                'heading' => 'Link naar eventpagina',
+                'default' => 'false',
+            ),
+            'class' => array(
+                'type'    => 'textfield',
+                'heading' => 'Extra CSS class',
+                'default' => '',
+            ),
+        ),
+    ) );
+
+    add_shortcode( 'hipsy_event_titel', 'hipsy_render_flatsome_event_title' );
+}
+
+/**
+ * Render Event Titel shortcode voor Flatsome
+ */
+function hipsy_render_flatsome_event_title( $atts ) {
+    $atts = shortcode_atts( array(
+        'event_id' => '',
+        'tag'      => 'h1',
+        'link'     => 'false',
+        'class'    => '',
+    ), $atts );
+
+    $event_id = absint( $atts['event_id'] );
+
+    if ( ! $event_id ) {
+        $event_id = get_the_ID();
+    }
+
+    if ( ! $event_id || get_post_type( $event_id ) !== 'events' ) {
+        return '';
+    }
+
+    $allowed_tags = array( 'h1', 'h2', 'h3', 'h4', 'p', 'div', 'span' );
+    $tag = in_array( strtolower( $atts['tag'] ), $allowed_tags, true ) ? strtolower( $atts['tag'] ) : 'h1';
+
+    $title = get_the_title( $event_id );
+
+    if ( empty( $title ) ) {
+        return '';
+    }
+
+    $classes = trim( 'hipsy-event-titel hew-titel ' . sanitize_html_class( $atts['class'] ) );
+    $content = esc_html( $title );
+
+    if ( $atts['link'] === 'true' ) {
+        $content = '<a href="' . esc_url( get_permalink( $event_id ) ) . '">' . $content . '</a>';
+    }
+
+    return sprintf(
+        '<%1$s class="%2$s">%3$s</%1$s>',
+        esc_attr( $tag ),
+        esc_attr( $classes ),
+        $content
+    );
 }
 
 /**
