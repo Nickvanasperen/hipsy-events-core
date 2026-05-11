@@ -56,9 +56,15 @@ function hipsy_divi_enqueue_styles() {
     if ( ! class_exists( 'ET_Builder_Module' ) ) {
         return;
     }
+
+    $css_path = plugin_dir_path( __FILE__ ) . 'assets/divi-modules.css';
+
+    if ( ! file_exists( $css_path ) ) {
+        return;
+    }
     
-    $css_file = plugin_dir_url( __FILE__ ) . 'assets/divi-modules.css';
-    $css_version = filemtime( plugin_dir_path( __FILE__ ) . 'assets/divi-modules.css' );
+    $css_file    = plugin_dir_url( __FILE__ ) . 'assets/divi-modules.css';
+    $css_version = filemtime( $css_path );
     
     wp_enqueue_style( 'hipsy-divi-modules', $css_file, array(), $css_version );
 }
