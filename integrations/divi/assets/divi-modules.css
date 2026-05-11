@@ -1,5 +1,18 @@
 /* Hipsy Divi Modules CSS */
 
+/* Divi Visual Builder Preview */
+.hipsy-divi-editor-preview {
+    min-height: 80px;
+}
+
+.hipsy-divi-preview-notice {
+    padding: 10px 14px;
+    border: 1px dashed currentColor;
+    opacity: 0.75;
+    margin-bottom: 12px;
+    border-radius: 6px;
+}
+
 /* ═══════════════════════════════════════
    EVENT TICKET BUTTON
    ═══════════════════════════════════════ */
@@ -71,9 +84,6 @@
     color: white;
 }
 
-/* ═══════════════════════════════════════
-   EVENT MODULES
-   ═══════════════════════════════════════ */
 .hipsy-event-titel a {
     color: inherit;
     text-decoration: none;
@@ -116,83 +126,4 @@
 
 .hipsy-read-more:hover {
     text-decoration: underline;
-}
-
-/* ═══════════════════════════════════════
-   TICKET INFO
-   ═══════════════════════════════════════ */
-.hipsy-event-tickets {
-    margin: 20px 0;
-}
-
-.tickets-title {
-    margin-bottom: 15px;
-}
-
-/* List Layout */
-.tickets-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.tickets-list .ticket-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.tickets-list .ticket-item:last-child {
-    border-bottom: none;
-}
-
-.ticket-price {
-    font-weight: 600;
-    color: #10b981;
-}
-
-/* Table Layout */
-.tickets-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.tickets-table th,
-.tickets-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.tickets-table th {
-    background: #f9fafb;
-    font-weight: 600;
-}
-
-/* Cards Layout */
-.tickets-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-}
-
-.ticket-card {
-    padding: 20px;
-    background: #f9fafb;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-}
-
-.ticket-card .ticket-name {
-    font-weight: 600;
-    margin-bottom: 8px;
-}
-
-.ticket-card .ticket-price {
-    font-size: 18px;
-    color: #10b981;
-    margin-bottom: 8px;
-}
-
-.ticket-card .ticket-status {
-    font-size: 14px;
 }
