@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Hipsy Events Builder
+ * Hipsy Events Core
  *
  * @package       HIPSY
  * @author        How About Yes
  *
  * @wordpress-plugin
- * Plugin Name:   Hipsy Events Builder
+ * Plugin Name:   Hipsy Events Core
  * Plugin URI:    https://hipsy.nl
- * Description:   Professional event builder plugin voor WordPress. Builder-onafhankelijk met Elementor-first approach. Sync Hipsy events en creëer custom event designs met filters, responsive layouts en carousel support.
- * Version:       4.5.7
+ * Description:   Core plugin voor Hipsy Events. Verzorgt API-koppeling, event sync, custom post type, instellingen en builder-onafhankelijke event data voor WordPress.
+ * Version:       4.6.0
  * Author:        How About Yes
  * Author URI:    https://howaboutyes.com
  * Text Domain:   hipsy-events
@@ -31,12 +31,12 @@ if ( file_exists( plugin_dir_path(__FILE__) . 'includes/helpers.php' ) ) {
     include_once plugin_dir_path(__FILE__) . "includes/helpers.php";
 }
 
-// Event card renderer (gebruikt door Elementor, Divi en shortcodes)
+// Event card renderer - builder-onafhankelijke fallback/shortcode rendering
 if ( file_exists( plugin_dir_path(__FILE__) . 'render/event-card.php' ) ) {
     include_once plugin_dir_path(__FILE__) . "render/event-card.php";
 }
 
-// Individual field shortcodes (ALTIJD laden - voor custom templates)
+// Individual field shortcodes - builder-onafhankelijk voor custom templates/shortcodes
 if ( file_exists( plugin_dir_path(__FILE__) . 'integrations/shortcodes/field-shortcodes.php' ) ) {
     include_once plugin_dir_path(__FILE__) . 'integrations/shortcodes/field-shortcodes.php';
 }
@@ -46,7 +46,7 @@ if ( file_exists( __DIR__ . "/templates/loopItem.php" ) ) include(__DIR__ . "/te
 if ( file_exists( __DIR__ . "/functions/styles.php" ) ) include(__DIR__ . "/functions/styles.php");
 if ( file_exists( __DIR__ . "/functions/displayEventsShortcode.php" ) ) include(__DIR__ . "/functions/displayEventsShortcode.php");
 
-// Oude shortcodes ALLEEN laden als v4.0 NIET enabled is
+// Oude builder-onafhankelijke shortcodes ALLEEN laden als v4.0 NIET enabled is
 // (v4.0 heeft eigen extended shortcodes)
 if ( ! get_option('hipsy_events_v4_enabled', 0) ) {
     if ( file_exists( __DIR__ . "/functions/builderShortcodes.php" ) ) include(__DIR__ . "/functions/builderShortcodes.php");
@@ -69,70 +69,24 @@ if ( file_exists( __DIR__ . "/functions/blockGutenberg.php" ) ) include(__DIR__ 
 if ( file_exists( __DIR__ . "/functions/cronJob.php" ) ) include(__DIR__ . "/functions/cronJob.php");
 if ( file_exists( __DIR__ . "/functions/ajaxLoadMore.php" ) ) include(__DIR__ . "/functions/ajaxLoadMore.php");
 
-// Elementor integration (LEGACY - altijd laden)
-if ( file_exists( plugin_dir_path(__FILE__) . 'functions/elementorWidgets.php' ) ) {
-    include_once plugin_dir_path(__FILE__) . 'functions/elementorWidgets.php';
-}
-
-// Elementor Dynamic Tags (ALTIJD laden - voor dropdown menu)
-if ( file_exists( plugin_dir_path(__FILE__) . 'integrations/elementor/elementor-dynamic-tags.php' ) ) {
-    include_once plugin_dir_path(__FILE__) . 'integrations/elementor/elementor-dynamic-tags.php';
-}
-
-// Divi integration (ALTIJD laden - werkt alleen als Divi actief is)
-if ( file_exists( plugin_dir_path(__FILE__) . 'integrations/divi/divi-loader.php' ) ) {
-    include_once plugin_dir_path(__FILE__) . 'integrations/divi/divi-loader.php';
-}
-
-// Flatsome (UX Builder) integration (NIEUW in v4.4.0)
-if ( file_exists( plugin_dir_path(__FILE__) . 'integrations/flatsome/flatsome-loader.php' ) ) {
-    include_once plugin_dir_path(__FILE__) . 'integrations/flatsome/flatsome-loader.php';
-}
-
 // ══════════════════════════════════════════════════════
-// v4.0 FEATURES - Schakel in via admin settings
-// ══════════════════════════════════════════════════════
-// Ga naar: Dashboard → Events → Settings → v4.0 Features
+// v4.0 CORE FEATURES - Schakel in via admin settings
 // ══════════════════════════════════════════════════════
 
 $v4_enabled = get_option('hipsy_events_v4_enabled', 0);
 
 if ( $v4_enabled ) {
-    
     // Core systemen (v4.0)
     if ( file_exists( plugin_dir_path(__FILE__) . 'core/query-system.php' ) ) {
         include_once plugin_dir_path(__FILE__) . "core/query-system.php";
     }
-    
+
     if ( file_exists( plugin_dir_path(__FILE__) . 'core/ajax-filter.php' ) ) {
         include_once plugin_dir_path(__FILE__) . "core/ajax-filter.php";
     }
-    
-    if ( file_exists( plugin_dir_path(__FILE__) . 'render/event-card.php' ) ) {
-        include_once plugin_dir_path(__FILE__) . "render/event-card.php";
-    }
-    
-    // v4.0 Extended shortcodes
+
+    // v4.0 builder-onafhankelijke shortcodes
     if ( file_exists( plugin_dir_path(__FILE__) . 'integrations/shortcodes/extended-shortcodes.php' ) ) {
         include_once plugin_dir_path(__FILE__) . 'integrations/shortcodes/extended-shortcodes.php';
-    }
-    
-    // v4.0 Elementor Filter Widget
-    if ( file_exists( plugin_dir_path(__FILE__) . 'integrations/elementor/filter-bar-widget.php' ) ) {
-        add_action( 'elementor/widgets/register', 'hipsy_register_v4_widgets' );
-    }
-    
-    function hipsy_register_v4_widgets( $widgets_manager ) {
-        $widget_file = plugin_dir_path(__FILE__) . 'integrations/elementor/filter-bar-widget.php';
-        
-        if ( ! file_exists( $widget_file ) ) {
-            return;
-        }
-        
-        require_once $widget_file;
-        
-        if ( class_exists( 'Hipsy_Filter_Bar_Widget' ) ) {
-            $widgets_manager->register( new Hipsy_Filter_Bar_Widget() );
-        }
     }
 }
