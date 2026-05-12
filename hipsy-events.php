@@ -10,7 +10,7 @@
  * Plugin Name:   Hipsy Events Core
  * Plugin URI:    https://www.youngsoulbusiness.com
  * Description:   Core plugin voor Hipsy Events. Verzorgt API-koppeling, event sync, custom post type, instellingen en builder-onafhankelijke event data voor WordPress.
- * Version:       1.0.0
+ * Version:       4.6.6
  * Author:        Young Soul Business & How About Yes
  * Author URI:    https://www.youngsoulbusiness.com
  * Text Domain:   hipsy-events
@@ -19,7 +19,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! defined( 'HIPSY_EVENTS_CORE_VERSION' ) ) {
-    define( 'HIPSY_EVENTS_CORE_VERSION', '1.0.0' );
+    define( 'HIPSY_EVENTS_CORE_VERSION', '4.6.6' );
 }
 
 if ( ! defined( 'HIPSY_EVENTS_CORE_PATH' ) ) {
