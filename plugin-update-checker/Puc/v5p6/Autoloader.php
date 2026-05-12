@@ -25,9 +25,6 @@ if ( !class_exists(Autoloader::class, false) ):
 			}
 			$this->libraryDir = $this->libraryDir . '/';
 
-			//Usually, dependencies like Parsedown are in the global namespace,
-			//but if someone adds a custom namespace to the entire library, they
-			//will be in the same namespace as this class.
 			$isCustomNamespace = (
 				substr($namespaceWithSlash, 0, strlen(self::DEFAULT_NS_PREFIX)) !== self::DEFAULT_NS_PREFIX
 			);
@@ -38,7 +35,8 @@ if ( !class_exists(Autoloader::class, false) ):
 				$libraryPrefix . 'Parsedown'       => 'vendor/Parsedown.php',
 			);
 
-			//Add the generic, major-version-only factory class to the static map.
+			// Add the generic, major-version-only factory class to the static map.
+			// This repository contains Puc/v5/PucFactory.php, not Puc/v5/Factory.php.
 			$versionSeparatorPos = strrpos(__NAMESPACE__, '\\v');
 			if ( $versionSeparatorPos !== false ) {
 				$versionSegment = substr(__NAMESPACE__, $versionSeparatorPos + 1);
@@ -47,20 +45,14 @@ if ( !class_exists(Autoloader::class, false) ):
 					$majorVersionSegment = substr($versionSegment, 0, $pointPos);
 					$majorVersionNs = __NAMESPACE__ . '\\' . $majorVersionSegment;
 					$this->staticMap[$majorVersionNs . '\\PucFactory'] =
-						'Puc/' . $majorVersionSegment . '/Factory.php';
+						'Puc/' . $majorVersionSegment . '/PucFactory.php';
 				}
 			}
 
 			spl_autoload_register(array($this, 'autoload'));
 		}
 
-		/**
-		 * Determine if this file is running as part of a Phar archive.
-		 *
-		 * @return bool
-		 */
 		private static function isPhar() {
-			//Check if the current file path starts with "phar://".
 			static $pharProtocol = 'phar://';
 			return (substr(__FILE__, 0, strlen($pharProtocol)) === $pharProtocol);
 		}
