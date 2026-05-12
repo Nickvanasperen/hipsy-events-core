@@ -10,7 +10,7 @@
  * Plugin Name:   Hipsy Events Core
  * Plugin URI:    https://www.youngsoulbusiness.com
  * Description:   Core plugin voor Hipsy Events. Verzorgt API-koppeling, event sync, custom post type, instellingen en builder-onafhankelijke event data voor WordPress.
- * Version:       4.6.9
+ * Version:       4.7.0
  * Author:        Young Soul Business & How About Yes
  * Author URI:    https://www.youngsoulbusiness.com
  * Text Domain:   hipsy-events
@@ -19,7 +19,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! defined( 'HIPSY_EVENTS_CORE_VERSION' ) ) {
-    define( 'HIPSY_EVENTS_CORE_VERSION', '4.6.9' );
+    define( 'HIPSY_EVENTS_CORE_VERSION', '4.7.0' );
 }
 
 if ( ! defined( 'HIPSY_EVENTS_CORE_PATH' ) ) {
@@ -30,10 +30,20 @@ if ( ! defined( 'HIPSY_EVENTS_CORE_URL' ) ) {
     define( 'HIPSY_EVENTS_CORE_URL', plugin_dir_url( __FILE__ ) );
 }
 
-// Plugin Update Checker is tijdelijk uitgeschakeld omdat de huidige library een activatie-fatal veroorzaakt.
-// Core blijft updatebaar zodra de PUC library opnieuw schoon/volledig is geplaatst en daarna hier opnieuw wordt geactiveerd.
+$hipsy_puc_file = plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php';
 
-// Core includes gebaseerd op de originele stabiele Hipsy Events plugin.
+if ( file_exists( $hipsy_puc_file ) ) {
+    require_once $hipsy_puc_file;
+
+    if ( class_exists( '\\YahnisElsts\\PluginUpdateChecker\\v5\\PucFactory' ) ) {
+        \\YahnisElsts\\PluginUpdateChecker\\v5\\PucFactory::buildUpdateChecker(
+            'https://github.com/Nickvanasperen/hipsy-events-core/',
+            __FILE__,
+            'hipsy-events-core'
+        );
+    }
+}
+
 if ( file_exists( __DIR__ . "/templates/loopItem.php" ) ) include(__DIR__ . "/templates/loopItem.php");
 if ( file_exists( __DIR__ . "/functions/styles.php" ) ) include(__DIR__ . "/functions/styles.php");
 if ( file_exists( __DIR__ . "/functions/displayEventsShortcode.php" ) ) include(__DIR__ . "/functions/displayEventsShortcode.php");
