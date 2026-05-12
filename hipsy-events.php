@@ -10,7 +10,7 @@
  * Plugin Name:   Hipsy Events Core
  * Plugin URI:    https://hipsy.nl
  * Description:   Core plugin voor Hipsy Events. Verzorgt API-koppeling, event sync, custom post type, instellingen en builder-onafhankelijke event data voor WordPress.
- * Version:       4.6.1
+ * Version:       4.6.2
  * Author:        How About Yes
  * Author URI:    https://howaboutyes.com
  * Text Domain:   hipsy-events
@@ -19,7 +19,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! defined( 'HIPSY_EVENTS_CORE_VERSION' ) ) {
-    define( 'HIPSY_EVENTS_CORE_VERSION', '4.6.1' );
+    define( 'HIPSY_EVENTS_CORE_VERSION', '4.6.2' );
 }
 
 if ( ! defined( 'HIPSY_EVENTS_CORE_PATH' ) ) {
@@ -30,11 +30,19 @@ if ( ! defined( 'HIPSY_EVENTS_CORE_URL' ) ) {
     define( 'HIPSY_EVENTS_CORE_URL', plugin_dir_url( __FILE__ ) );
 }
 
-// Plugin Update Checker
-require plugin_dir_path(__FILE__) . 'plugin-update-checker/plugin-update-checker.php';
-use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
-$hipsy_updater = PucFactory::buildUpdateChecker('https://github.com/nickvanasperen/hipsy-events-builder/', __FILE__, 'hipsy-events-builder');
-$hipsy_updater->getVcsApi()->enableReleaseAssets();
+// Plugin Update Checker - tijdelijk optioneel zolang Freemius nog niet actief is.
+$hipsy_puc_file = plugin_dir_path(__FILE__) . 'plugin-update-checker/plugin-update-checker.php';
+if ( file_exists( $hipsy_puc_file ) ) {
+    require_once $hipsy_puc_file;
+    if ( class_exists( '\\YahnisElsts\\PluginUpdateChecker\\v5\\PucFactory' ) ) {
+        $hipsy_updater = \\YahnisElsts\\PluginUpdateChecker\\v5\\PucFactory::buildUpdateChecker(
+            'https://github.com/nickvanasperen/hipsy-events-core/',
+            __FILE__,
+            'hipsy-events-core'
+        );
+        $hipsy_updater->getVcsApi()->enableReleaseAssets();
+    }
+}
 
 // ══════════════════════════════════════════════════════
 // CORE INCLUDES - Basis functionaliteit (altijd actief)
